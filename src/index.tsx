@@ -36,8 +36,6 @@ const App = () => {
       },
     });
 
-    // console.log(result);
-
     setCode(result.outputFiles[0].text);
   };
 
