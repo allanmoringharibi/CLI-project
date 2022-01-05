@@ -1,5 +1,6 @@
 import * as esbuild from "esbuild-wasm";
 import ReactDOM from "react-dom";
+import "bulmaswatch/superhero/bulmaswatch.min.css";
 import { useState, useEffect, useRef } from "react";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 import { fetchPlugin } from "./plugins/fetch-plugin";
