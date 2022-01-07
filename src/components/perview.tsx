@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import "./perview.css";
 
 interface Perviewprops {
   code: string;
@@ -32,12 +33,14 @@ const Perview: React.FC<Perviewprops> = ({ code }) => {
   }, [code]);
 
   return (
-    <iframe
-      sandbox="allow-scripts"
-      srcDoc={html}
-      ref={iframe}
-      title="code-sandbox"
-    />
+    <div className="preview-wrapper">
+      <iframe
+        sandbox="allow-scripts"
+        srcDoc={html}
+        ref={iframe}
+        title="code-sandbox"
+      />
+    </div>
   );
 };
 
