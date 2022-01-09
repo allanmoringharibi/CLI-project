@@ -3,6 +3,7 @@ import "./perview.css";
 
 interface Perviewprops {
   code: string;
+  err: string;
 }
 const html = `
   <html>
@@ -34,7 +35,7 @@ const html = `
   </html>
   `;
 
-const Perview: React.FC<Perviewprops> = ({ code }) => {
+const Perview: React.FC<Perviewprops> = ({ code, err }) => {
   const iframe = useRef<any>();
 
   useEffect(() => {
@@ -52,6 +53,7 @@ const Perview: React.FC<Perviewprops> = ({ code }) => {
         ref={iframe}
         title="code-sandbox"
       />
+      {err && <div className="preview-error">{err}</div>}
     </div>
   );
 };
