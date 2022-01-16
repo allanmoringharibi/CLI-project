@@ -57,9 +57,10 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
 
       if (foundIndex < 0) {
         state.order.push(cell.id);
+      } else {
+        state.order.splice(foundIndex, 0, cell.id);
       }
 
-      state.order.splice(foundIndex, 0, cell.id);
       return state;
     default:
       return state;
@@ -67,7 +68,7 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
 });
 
 const randomId = () => {
-  return Math.random().toString(36).substring(2, 5);
+  return Math.random().toString(36).substr(2, 5);
 };
 
 export default reducer;
