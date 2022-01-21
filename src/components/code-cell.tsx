@@ -5,6 +5,7 @@ import bundle from "../bundler";
 import Resizable from "./resizable";
 import { Cell } from "../state";
 import { useActions } from "../hooks/use-actions";
+import "./code-cell.css";
 
 interface CodeCellProps {
   cell: Cell;
@@ -21,7 +22,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
       const output = await bundle(cell.content);
       setCode(output.code);
       setErr(output.err);
-    }, 1500);
+    }, 2000);
 
     return () => {
       clearTimeout(timer);
@@ -43,7 +44,17 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
             onChange={(value) => updateCell(cell.id, value)}
           />
         </Resizable>
-        <Perview code={code} err={err} />
+        <div className="progress-wrapper">
+          {!code ? (
+            <div className="progress-cover">
+              <progress className="progress is-small is-primary" max="100">
+                Loading
+              </progress>
+            </div>
+          ) : (
+            <Perview code={code} err={err} />
+          )}
+        </div>
       </div>
     </Resizable>
   );
