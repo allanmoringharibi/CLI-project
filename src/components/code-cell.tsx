@@ -6,9 +6,22 @@ import Resizable from "./resizable";
 import { Cell } from "../state";
 import { useActions } from "../hooks/use-actions";
 import "./code-cell.css";
+import { useTypedSelector } from "../hooks/use-typed-selector";
+import { useSelector } from "react-redux";
 
 interface CodeCellProps {
   cell: Cell;
+}
+
+interface CellsState {
+  cells: {
+    loading: boolean;
+    error: string | null;
+    order: string[];
+    data: {
+      [key: string]: Cell;
+    };
+  };
 }
 
 const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
@@ -17,9 +30,41 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 
   const { updateCell } = useActions();
 
+  const cumulativeCode: any = useSelector<CellsState>((state) => {
+    const { data, order } = state.cells;
+    const orderedCells = order.map((id) => data[id]);
+
+    const cumulativeCode = [
+      `
+      const show = (value) => {
+          document.querySelector('#root').innerHTML = value;
+      };
+      `,
+    ];
+
+    for (let c of orderedCells) {
+      if (c.type === "code") {
+        cumulativeCode.push(c.content);
+      }
+      if (c.id === cell.id) {
+        break;
+      }
+    }
+
+    return cumulativeCode;
+  });
+
   useEffect(() => {
+    if (!code) {
+      bundle(cumulativeCode.join("\n")).then((output) => {
+        setCode(output.code);
+        setErr(output.err);
+      });
+      return;
+    }
+
     const timer = setTimeout(async () => {
-      const output = await bundle(cell.content);
+      const output = await bundle(cumulativeCode.join("\n"));
       setCode(output.code);
       setErr(output.err);
     }, 2000);
@@ -27,7 +72,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     return () => {
       clearTimeout(timer);
     };
-  }, [cell.content]);
+  }, [code, cumulativeCode]);
 
   return (
     <Resizable direction="vertical">
